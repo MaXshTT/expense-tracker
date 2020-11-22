@@ -1,0 +1,212 @@
+{% extends 'expense_tracker_app/base.html' %}
+{% load static %}
+{% url 'budget' as budget_url %}
+{% block title %}Budget Summary{% endblock %}
+{% block active_page %}Budget Summary{% endblock %}
+{% block header_title %}Budget Summary{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-success">
+      <div class="inner">
+        <h3>{{ income.get_daily_spendable }}<sup style="font-size: 20px">$</sup></h3>
+
+        <p>Daily Spendable</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-dollar-sign"></i>
+      </div>
+      <a href="{{ budget_url }}" class="small-box-footer">
+        More info <i class="fas fa-arrow-circle-right"></i>
+      </a>
+    </div>
+  </div>
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-indigo">
+      <div class="inner">
+        <h3>{{ income.get_monthly_spendable }}<sup style="font-size: 20px">$</sup></h3>
+
+        <p>Monthly Spendable</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-money-bill-wave"></i>
+      </div>
+      <a href="{{ budget_url }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-olive">
+      <div class="inner">
+        <h3>{{ income.get_monthly_savings }}<sup style="font-size: 20px">$</sup></h3>
+
+        <p>Monthly Savings</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-piggy-bank"></i>
+      </div>
+      <a href="{{ budget_url }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+  <div class="col-lg-3 col-6">
+    <!-- small box -->
+    <div class="small-box bg-danger">
+      <div class="inner">
+        <h3>{{ income.get_sum_expenses_user }}<sup style="font-size: 20px">$</sup></h3>
+
+        <p>Monthly Expenses</p>
+      </div>
+      <div class="icon">
+        <i class="fas fa-shopping-cart"></i>
+      </div>
+      <a href="{{ budget_url }}" class="small-box-footer">More info <i class="fas fa-arrow-circle-right"></i></a>
+    </div>
+  </div>
+</div>
+<!-- /.row -->
+<div class="row mb-2">
+  <div class="col-sm-6">
+    <div class="card card-teal">
+      <div class="card-header">
+        <h3 class="card-title">Expenses Chart</h3>
+        <div class="card-tools">
+          <!-- Collapse Button -->
+          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+        </div>
+        <!-- /.card-tools -->
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <div class="chartjs-size-monitor">
+          <div class="chartjs-size-monitor">
+            <div class="chartjs-size-monitor-expand">
+              <div class="">
+              </div>
+            </div>
+          </div>
+          <div class="chartjs-size-monitor-shrink">
+            <div class="">
+            </div>
+          </div>
+        </div>
+        <canvas id="donutChart"
+          style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 644px;"
+          width="644" height="250" class="chartjs-render-monitor"></canvas>
+      </div>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+  <div class="col-sm-6">
+    <div class="card card-orange">
+      <div class="card-header">
+        <h3 class="card-title">Monthly Balance</h3>
+        <div class="card-tools">
+          <!-- Collapse Button -->
+          <button type="button" class="btn btn-tool" data-card-widget="collapse"><i class="fas fa-minus"></i></button>
+        </div>
+        <!-- /.card-tools -->
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <div class="chartjs-size-monitor">
+          <div class="chartjs-size-monitor">
+            <div class="chartjs-size-monitor-expand">
+              <div class="">
+              </div>
+            </div>
+          </div>
+          <div class="chartjs-size-monitor-shrink">
+            <div class="">
+            </div>
+          </div>
+        </div>
+        <canvas id="barChart" style="min-height: 250px; height: 250px; max-height: 250px; max-width: 100%; display: block; width: 644px;" width="644" height="250" class="chartjs-render-monitor"></canvas>
+      </div>
+    </div>
+    <!-- /.card-body -->
+  </div>
+  <!-- /.card -->
+</div>
+<div class="row mb-2">
+  <div class="col-sm-12">
+    <div class="card card-info">
+      <div class="card-header">
+        <h3 class="card-title">Expenses</h3>
+        <div class="card-tools">
+          <!-- Collapse Button -->
+          <button type="button" class="btn btn-tool" data-card-widget="collapse">
+            <i class="fas fa-minus"></i>
+          </button>
+        </div>
+        <!-- /.card-tools -->
+      </div>
+      <!-- /.card-header -->
+      <div class="card-body">
+        <div class="row">
+        {% for category in categories %}
+          <div class="col-xl-6">
+            <div class="card">
+              <div class="card-header">
+                <h3 class="card-title category-title" data-sum-expenses="{{ category.get_sum_expenses_category }}">{{ category }}</h3>
+              </div>
+              <!-- /.card-header -->
+              <div class="card-body p-0">
+                <table class="table table-striped text-center">
+                  <thead>
+                    <tr>
+                      <th style="width: 5%">#</th>
+                      <th style="width: 45%">Title</th>
+                      <th style="width: 35%">Cost</th>
+                      <th style="width: 15%">Day due</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {% if category.expense_set.all %}
+                    {% for expense in category.expense_set.all %}
+                      <tr>
+                        <td>{{ forloop.counter }}.</td>
+                        <td>{{ expense }}</td>
+                        <td>{{ expense.cost|floatformat:"-2" }}$</td>
+                        <td>{% if expense.day_due %}{{ expense.day_due }}{% endif %}</td>
+                      </tr>
+                    {% endfor %}
+                    {% else %}
+                      <tr>
+                        <td></td>
+                        <td>Empty</td>
+                        <td></td>
+                        <td></td>
+                      </tr>
+                    {% endif %}
+                  </tbody>
+                </table>
+              </div>
+              <!-- /.card-body -->
+            </div>
+            <!-- /.card -->
+          </div>
+        {% endfor %}
+        </div>
+      </div>
+      <!-- /.card-body -->
+    </div>
+    <!-- /.card -->
+  </div>
+</div>
+<input type="hidden" id="monthly-expenses" value="{{ income.get_sum_expenses_user }}">
+<input type="hidden" id="monthly-income" value="{{ income.get_total_monthly}}">
+{% endblock %}
+{% block body_extra %}
+<!--ChartJS -->
+<script src="{% static 'adminlte/plugins/chart.js/Chart.min.js' %}"></script>
+<!-- jQuery UI-->
+<script src="{% static 'adminlte/plugins/jquery-ui/jquery-ui.min.js' %}"></script>
+<!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
+<script>
+  $.widget.bridge('uibutton', $.ui.button);
+</script>
+<script src="{% static 'js/index.js' %}"></script>
+{% endblock %}

@@ -1,0 +1,13 @@
+# Database
+# https://docs.djangoproject.com/en/3.0/ref/settings/#databases
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': '<enter the name of the database here>',
+        'HOST': 'localhost',
+        'PASSWORD': '<enter your database password here>',
+        'USER': '<enter your username here>',
+        'PORT': 5432
+    }
+}
